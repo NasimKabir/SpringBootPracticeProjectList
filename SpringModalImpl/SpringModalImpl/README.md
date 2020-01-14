@@ -11,3 +11,6 @@ Update Country Information
 ![Screenshot_13](https://user-images.githubusercontent.com/31030260/72363444-11c72880-371f-11ea-9abd-fc8c8878799e.png)
 
 
+Delete One Information
+
+![Screenshot_14](https://user-images.githubusercontent.com/31030260/72363547-3fac6d00-371f-11ea-801d-b8e63a000484.png)
