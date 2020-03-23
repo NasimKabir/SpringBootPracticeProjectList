@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1, shrink-to-fit=no"
+	name="viewport">
+
+<link rel="stylesheet" th:href="@{bootstrap4/css/bootstrap.min.css}">
+
+<title>Index</title>
+</head>
+<body>
+	<div class="container">
+	<a th:href="@{/logout}" class="nav-link">Logout</a>
+<a th:href="@{/create}">Create user</a>
+		<div class="card">
+			<div class="card-block">
+				<table class="table table-hover">
+					<thead class="table-primary">
+						<tr>
+							<th>ID</th>
+							<th>Email</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="coun : ${users}">
+							<td th:text="${coun.id}"></td>
+							<td th:text="${coun.email}"></td>
+							<!-- <td><a class="btn btn-danger delete"
+								th:href="@{delete/(id=${coun.id})}" >Delete</a> <a
+								class="btn btn-primary edit"
+								th:href="@{findOne/(id=${coun.id})}">Edit</a></td> -->
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		</div>
+
+		
+	<script th:src="@{/bootstrap4/js/bootstrap.min.js}"></script>
+</body>
+</html>
