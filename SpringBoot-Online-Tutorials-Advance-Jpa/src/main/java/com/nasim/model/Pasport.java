@@ -15,6 +15,8 @@ public class Pasport {
 	private int id;
 	private String number;
 	
+	@OneToOne(fetch = FetchType.LAZY,mappedBy = "pasport")
+	private Student student;
 	
 	public Pasport(String number) {
 		super();
