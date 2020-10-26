@@ -1,9 +1,9 @@
 package com.nasim.model;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,53 +15,54 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Email;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "username"),
+		@UniqueConstraint(columnNames = "email") })
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
-	
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@Size(min = 4, message = "Username atleast 4 charecter")
-	private String username;
-
+	
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created = new Date();
 
-	 //@JsonIgnore
-	@Size(min = 4, message = "password atleast 4 charecter")
-	private String password;
 	
-	@Email
-	@Size(min = 4, message = "Give valid email")
+	private String username;
+
+	
 	private String email;
+	
+	
+	private String phoneNumber;
 
-	@ToString.Exclude
-	@ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
-	private Set<Role> roles;
-
-	public User(@Size(min = 4, message = "Username atleast 4 charecter") String username,
-			@Size(min = 4, message = "password atleast 4 charecter") String password,
-			@Email @Size(min = 4, message = "Give valid email") String email) {
+	@NotBlank
+	@Size(max = 120)
+	private String password;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles = new HashSet<>();
+	
+	
+	public User(String username, String email, String phoneNumber, @NotBlank @Size(max = 120) String password) {
 		super();
 		this.username = username;
-		this.password = password;
 		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.password = password;
 	}
 	
-public User() {
-}
 }

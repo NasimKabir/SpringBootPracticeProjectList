@@ -1,5 +1,6 @@
 package com.nasim.config;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,22 +18,27 @@ import com.nasim.security.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
-public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
+public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
-	private  UserDetailsServiceImpl customUserDetailsService;
+	private UserDetailsServiceImpl customUserDetailsService;
 	@Autowired
-	private  PasswordEncoder passwordEncoder;
+	private PasswordEncoder encoder;
 	@Autowired
-    private  MyAuthenticationEntryPoint myAuthenticationEntryPoint;
-	@Autowired
-    private  JwtAuthenticationFilter authenticationFilter;
-    
-    
-	
-	
+	private MyAuthenticationEntryPoint myAuthenticationEntryPoint;
+
+	@Bean
+	public JwtAuthenticationFilter authenticationFilter() {
+		return new JwtAuthenticationFilter();
+	}
+
+	@Bean
+	public ModelMapper getModelMapper() {
+		return new ModelMapper();
+	}
+
 	@Override
 	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-		authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder);
+		authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(encoder);
 	}
 
 	@Bean
@@ -41,31 +47,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 		return super.authenticationManagerBean();
 	}
 
-	
-	
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(myAuthenticationEntryPoint)
+				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.authorizeRequests().antMatchers("/", "/login").permitAll().antMatchers("/role", "/signup").permitAll()
+				.anyRequest().authenticated();
 
-	 @Override
-	    protected void configure(HttpSecurity http) throws Exception {
-		 http.cors()
-         .and()
-         .csrf()
-         .disable()
-         .exceptionHandling()
-         .authenticationEntryPoint(myAuthenticationEntryPoint)
-         .and()
-         .sessionManagement()
-         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-         .and()
-         .authorizeRequests()
-         .antMatchers("/","/login").permitAll()
-         .antMatchers("/role","/signup").permitAll()
-         .anyRequest()
-         .authenticated();
-		 
-		 http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
-		 
-	       
-	    }
+		http.addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-	 
+	}
+
 }

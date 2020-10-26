@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.nasim.security.UserDetailsImpl;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -19,49 +18,40 @@ import io.jsonwebtoken.UnsupportedJwtException;
 
 @Component
 public class JwtTokenProvider {
-	private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
-	private String secretKey = "SpringBootTutorial";
-	private Long expireHour = Long.valueOf("5");
+private Logger logger=LoggerFactory.getLogger(this.getClass());
+private String secretkey="SpringbootTutorials2020";
+private Long expirationInMillis=Long.valueOf("4");
 
-	public String generateToken(Authentication authentication) {
-		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-		Date now = new Date();
-		return Jwts.builder()
-				.setSubject((userPrincipal.getUsername()))
-				.setIssuedAt(now)
-				.setExpiration(DateUtils.getExpirationTime(expireHour))
-				.signWith(SignatureAlgorithm.HS512, secretKey)
-				.compact();
-		
-	}
+public String GenerateToken(Authentication authentication) {
+	UserDetailsImpl detailsImpl=(UserDetailsImpl) authentication.getPrincipal();
+	return Jwts.builder()
+			.setSubject(detailsImpl.getUsername())
+			.setIssuedAt(new Date())
+			.setExpiration(DateUtils.getExpirationTime(expirationInMillis))
+			.signWith(SignatureAlgorithm.HS512, secretkey)
+			.compact();
 	
-	 public Long getUserIdFromJwtToken(String token){
-	        Claims claims = Jwts.parser()
-	                .setSigningKey(secretKey).parseClaimsJws(token).getBody();
-	        return Long.valueOf(claims.getSubject());
-	    }
+}
 
-	 public String getUserNameFromJwtToken(String token) {
-			return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-		}
+public String getUsernameFormJwtToken(String token) {
+	return Jwts.parser().setSigningKey(secretkey).parseClaimsJws(token).getBody().getSubject();
+}
 
-		public boolean validateJwtToken(String authToken) {
-			try {
-				Jwts.parser().setSigningKey(secretKey).parseClaimsJws(authToken);
-				return true;
-			} catch (SignatureException e) {
-				logger.error("Invalid JWT signature: {}", e.getMessage());
-			} catch (MalformedJwtException e) {
-				logger.error("Invalid JWT token: {}", e.getMessage());
-			} catch (ExpiredJwtException e) {
-				logger.error("JWT token is expired: {}", e.getMessage());
-			} catch (UnsupportedJwtException e) {
-				logger.error("JWT token is unsupported: {}", e.getMessage());
-			} catch (IllegalArgumentException e) {
-				logger.error("JWT claims string is empty: {}", e.getMessage());
-			}
-
-			return false;
-		}
-
+public boolean validateJwtToken(String token) {
+	try {
+	Jwts.parser().setSigningKey(secretkey).parseClaimsJws(token);
+	return true;
+	}catch(SignatureException e) {
+		logger.error("Invalid jwt signature {}", e.getMessage());
+	}catch(MalformedJwtException e) {
+		logger.error("Invalid Jwt token {}", e.getMessage());
+	}catch(ExpiredJwtException e) {
+		logger.error("Jwt token expired {}", e.getMessage());
+	}catch(UnsupportedJwtException e) {
+		logger.error("Jwt token is unsupported {}", e.getMessage());
+	}catch(IllegalArgumentException e) {
+		logger.error("Jwt claims string is empty {}", e.getMessage());
+	}
+	return false;
+}
 }
