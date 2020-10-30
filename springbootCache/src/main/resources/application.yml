@@ -1,0 +1,24 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+spring:
+  cache:
+    redis:
+      cache-null-values: true
+      time-to-live: 60000
+    type: redis
+  datasource:
+    password: 1011
+    url: jdbc:mysql://localhost:3306/spring_boot_tutorial
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialet: org.hibernate.dialect.MySQL5Dialect
+        format_sql: true
+    show-sql: true
+ 
