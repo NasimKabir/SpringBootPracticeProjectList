@@ -22,5 +22,5 @@ public interface AppUserRepository
     int enableAppUser(String email);
 
 
-
+    AppUser findUserByEmail(String email);
 }

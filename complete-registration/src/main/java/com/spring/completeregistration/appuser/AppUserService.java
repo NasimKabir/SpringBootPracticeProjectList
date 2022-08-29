@@ -4,12 +4,14 @@ import com.spring.completeregistration.email.EmailSender;
 import com.spring.completeregistration.registration.token.ConfirmationToken;
 import com.spring.completeregistration.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -78,29 +80,25 @@ public class AppUserService implements UserDetailsService {
 
     // reset password
     public String requestPasswordReset(String email) {
-        LocalDateTime  resetDate=LocalDateTime.now();
         AppUser appUser=appUserRepository.findByEmail(email).orElseThrow( ()-> new UsernameNotFoundException("User email not found"));
 
         String token = UUID.randomUUID().toString();
-        String password = "";
-        String link = "http://localhost:8080/api/v1/registration/updatePasswort?token=" + token +"&email="+appUser.getEmail();
+        String link = "http://localhost:8080/api/v1/registration/updatePassword?email="+appUser.getEmail();
         emailSender.send(
                 appUser.getEmail(),
                 buildEmailFogotPassword(appUser.getUsername(),appUser.getPassword(), link));
          return token;
     }
-    public Optional<AppUser> updatePassword(String token,String email,String newPassword) {
-        LocalDateTime  resetDate=LocalDateTime.now();
-        return appUserRepository.findByEmail(email).map(
-                user->{
-                    user.setPassword(bCryptPasswordEncoder.encode(newPassword));
-                    user.setResetDate(resetDate);
-                    return user;
-                }
-        ).map(appUserRepository::save);
+
+    // change password
+    public String changePassword(String email,String password) {
+        AppUser appUser=appUserRepository.findByEmail(email).orElseThrow( ()-> new UsernameNotFoundException("User email not found"));
+        appUser.setPassword(bCryptPasswordEncoder.encode(password));
+        appUser.setResetDate(LocalDateTime.now());
+        System.out.println("user info "+appUser);
+        appUserRepository.save(appUser);
+        return "password changed successfully";
     }
-
-
 
     private String buildEmailFogotPassword(String name,String password, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
@@ -158,7 +156,7 @@ public class AppUserService implements UserDetailsService {
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"></p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Forget password link is :  \" + password + \"</p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Activate Now</a> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"></p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Forget password link is : </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Activate Now</a> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>" +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +

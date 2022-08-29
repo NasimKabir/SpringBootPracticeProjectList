@@ -1,11 +1,8 @@
 package com.spring.completeregistration.registration;
 
-import com.spring.completeregistration.appuser.AppUser;
 import com.spring.completeregistration.appuser.AppUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/v1/registration")
@@ -32,7 +29,10 @@ public class RegistrationController {
     }
 
     @PostMapping("/updatePassword")
-    public Optional<AppUser> updatePassword(@RequestParam String email, @RequestParam String token, @RequestParam String newPassword) {
-        return appUserService.updatePassword(email,token,newPassword);
+    public String updatePassword(@RequestParam String email, @RequestParam String newPassword) {
+        return appUserService.changePassword(email,newPassword);
     }
+
+    // update password
+
 }
