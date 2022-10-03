@@ -5,12 +5,14 @@ import com.spring.productservice.entity.Order;
 import com.spring.productservice.model.Product;
 import com.spring.productservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -18,6 +20,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
+@Slf4j
 public class OrderController {
     private final OrderService orderService;
     private final ProductClientService productClientService;
@@ -91,12 +94,11 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
-    // get all products
-    @GetMapping("/products")
-    public ResponseEntity getAllProducts(){
-        return ResponseEntity.ok(productClientService.getAllProducts());
+    // get all employees by page
+    @GetMapping("/products/all")
+    public ResponseEntity<Map<String,Object>> getAllProducts(){
+        return new ResponseEntity<>( productClientService.getAllProducts(),HttpStatus.OK);
     }
-
     // get product by id
     @GetMapping("/products/{id}")
     public ResponseEntity getProductById(@PathVariable Long id){
@@ -111,8 +113,20 @@ public class OrderController {
 
     // update product
     @PutMapping("/products")
-    public ResponseEntity<Void> updateProduct(@RequestBody Product order, @RequestParam Long id){
-        productClientService.updateProduct(order, id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Product> updateProduct(@RequestBody Product order, @RequestParam Long id){
+       Product product= productClientService.updateProduct(order, id);
+       log.info("product: {}",product);
+        return new ResponseEntity<>(product,HttpStatus.OK);
+    }
+
+    // patch update product
+    @PatchMapping("/products/{id}")
+    public ResponseEntity<Product> patchUpdateProduct(@RequestBody Product product, @PathVariable Long id){
+         product= productClientService.patchUpdateProduct(product, id);
+         if(product.equals(null)){
+             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+         }
+        log.info("product: {}",product);
+        return new ResponseEntity<>(product,HttpStatus.OK);
     }
 }

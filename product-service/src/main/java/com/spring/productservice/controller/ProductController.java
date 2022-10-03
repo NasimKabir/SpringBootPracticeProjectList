@@ -3,6 +3,7 @@ package com.spring.productservice.controller;
 import com.spring.productservice.entity.Product;
 import com.spring.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
+@Slf4j
 public class ProductController {
     private final ProductService productService;
 
@@ -36,38 +38,27 @@ public class ProductController {
     @PutMapping
     public ResponseEntity<Product>updateProduct(@RequestBody Product product, @RequestParam Long id){
         Optional<Product> getProduct= Optional.ofNullable(productService.getById(id));
+        log.info("getProduct: {}",getProduct);
         if(getProduct.isPresent()){
             product.setId(id);
             product=productService.save(product);
             return ResponseEntity.ok(product);
         }
-        return ResponseEntity.notFound().build();
+        return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
     }
     // patch update employee
     @PatchMapping("/{id}")
-    public ResponseEntity<Product> patchUpdateProduct(@RequestBody Product product, @PathVariable Long id){
-        Optional<Product> getProduct= Optional.ofNullable(productService.getById(id));
-        return getProduct.map(currrentValue -> {
-            if(product.getName()!=null){
-                currrentValue.setName(product.getName());
-            }
-            if(product.getDescription()!=null){
-                currrentValue.setDescription(product.getDescription());
-            }
-            if(product.getPrice()!=null){
-                currrentValue.setPrice(product.getPrice());
-            }
-            return currrentValue;
-        }).map(productService::save).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public Optional<Product> patchUpdateProduct(@RequestBody Product product, @PathVariable Long id){
+        return productService.update(product,id);
     }
 
     // get all employees by page
     @GetMapping("/all")
     public ResponseEntity<Map<String, Object>> getAllProduct(@RequestParam(required = false, defaultValue = "0") Integer pageNo,
-                                                               @RequestParam(required = false, defaultValue = "9") Integer pageSize){
+                                                             @RequestParam(required = false, defaultValue = "9") Integer pageSize){
         Pageable paging = PageRequest.of(pageNo, pageSize);
         List<Product> employeeList = new ArrayList<Product>();
-        Page<Product> pageableList = productService.getPageableList(paging);
+        Page<Product> pageableList = productService.getAll(paging);
         pageableList.forEach(employee -> {
             employeeList.add(employee);
         });
@@ -84,14 +75,9 @@ public class ProductController {
     // delete employee by id
     @DeleteMapping("/{id}")
     public ResponseEntity deleteProduct(@PathVariable Long id){
-        productService.deleteById(id);
+        productService.delete(id);
         return ResponseEntity.ok().build();
     }
-    // delete all employees
-    @DeleteMapping("/all")
-    public ResponseEntity deleteAllProducts(List<Product> products){
-        productService.deleteAll(products);
-        return ResponseEntity.ok().build();
-    }
+
 
 }
