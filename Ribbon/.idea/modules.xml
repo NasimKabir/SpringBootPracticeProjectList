@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Eureka-Server/Eureka-Server.iml" filepath="$PROJECT_DIR$/Eureka-Server/Eureka-Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Ribbon.iml" filepath="$PROJECT_DIR$/.idea/Ribbon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/product-service/order-service.iml" filepath="$PROJECT_DIR$/product-service/order-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/order-service-ribbon/order-service-ribbon.iml" filepath="$PROJECT_DIR$/order-service-ribbon/order-service-ribbon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/product-service-1/product-service (2).iml" filepath="$PROJECT_DIR$/product-service-1/product-service (2).iml" />
+      <module fileurl="file://$PROJECT_DIR$/product-service-2/product-service (3).iml" filepath="$PROJECT_DIR$/product-service-2/product-service (3).iml" />
+      <module fileurl="file://$PROJECT_DIR$/product-service-3/product-service (4).iml" filepath="$PROJECT_DIR$/product-service-3/product-service (4).iml" />
+      <module fileurl="file://$PROJECT_DIR$/product-service-4/product-service (5).iml" filepath="$PROJECT_DIR$/product-service-4/product-service (5).iml" />
+      <module fileurl="file://$PROJECT_DIR$/product-service-5/product-service (6).iml" filepath="$PROJECT_DIR$/product-service-5/product-service (6).iml" />
+      <module fileurl="file://$PROJECT_DIR$/product-service-6/product-service (7).iml" filepath="$PROJECT_DIR$/product-service-6/product-service (7).iml" />
+      <module fileurl="file://$PROJECT_DIR$/order-service/product-service-ribbon.iml" filepath="$PROJECT_DIR$/order-service/product-service-ribbon.iml" />
+    </modules>
+  </component>
+</project>
