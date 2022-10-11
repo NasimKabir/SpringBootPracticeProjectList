@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Eureka-Server/Eureka-Server.iml" filepath="$PROJECT_DIR$/Eureka-Server/Eureka-Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/configServer/configServer.iml" filepath="$PROJECT_DIR$/configServer/configServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/openfeign.iml" filepath="$PROJECT_DIR$/.idea/openfeign.iml" />
+      <module fileurl="file://$PROJECT_DIR$/order-service-feignClient/order-service-ribbon.iml" filepath="$PROJECT_DIR$/order-service-feignClient/order-service-ribbon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/product-service-1/product-service.iml" filepath="$PROJECT_DIR$/product-service-1/product-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/product-service-2/product-service (1).iml" filepath="$PROJECT_DIR$/product-service-2/product-service (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/product-service-3/product-service (2).iml" filepath="$PROJECT_DIR$/product-service-3/product-service (2).iml" />
+      <module fileurl="file://$PROJECT_DIR$/product-service-4/product-service (3).iml" filepath="$PROJECT_DIR$/product-service-4/product-service (3).iml" />
+      <module fileurl="file://$PROJECT_DIR$/product-service-5/product-service (4).iml" filepath="$PROJECT_DIR$/product-service-5/product-service (4).iml" />
+    </modules>
+  </component>
+</project>
